@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{F008DA0D-7C56-426D-9348-4C8B0453E7EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserIntegrationTests", "UserIntegrationTests\UserIntegrationTests.csproj", "{4CA453B0-6A30-45B1-9A69-A60E320E29D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F008DA0D-7C56-426D-9348-4C8B0453E7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F008DA0D-7C56-426D-9348-4C8B0453E7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F008DA0D-7C56-426D-9348-4C8B0453E7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F008DA0D-7C56-426D-9348-4C8B0453E7EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CA453B0-6A30-45B1-9A69-A60E320E29D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CA453B0-6A30-45B1-9A69-A60E320E29D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CA453B0-6A30-45B1-9A69-A60E320E29D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CA453B0-6A30-45B1-9A69-A60E320E29D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
