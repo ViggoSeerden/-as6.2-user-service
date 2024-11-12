@@ -11,10 +11,10 @@ COPY ["UserServiceDAL/UserServiceDAL.csproj", "UserServiceDAL/"]
 RUN dotnet restore "UserService/UserService.csproj"
 COPY . .
 WORKDIR "/src/UserService"
-RUN dotnet build "UserService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "UserService.csproj" -c Development -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "UserService.csproj" -c $BUILD_CONFIGURATION -o /app/publish
+RUN dotnet publish "UserService.csproj" -c Development -o /app/publish
 
 FROM base AS final
 WORKDIR /app
