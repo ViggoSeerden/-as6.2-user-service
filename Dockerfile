@@ -6,8 +6,8 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["UserService/UserService.csproj", "UserService/"]
-COPY ["UserService/UserServiceBusiness.csproj", "UserServiceBusiness/"]
-COPY ["UserService/UserServiceDAL.csproj", "UserServiceDAL/"]
+COPY ["UserServiceBusiness/UserServiceBusiness.csproj", "UserServiceBusiness/"]
+COPY ["UserServiceDAL/UserServiceDAL.csproj", "UserServiceDAL/"]
 RUN dotnet restore "UserService/UserService.csproj"
 COPY . .
 WORKDIR "/src/UserService"
