@@ -1,9 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using UserServiceBusiness.Interfaces;
 using UserServiceBusiness.Services;
+using UserServiceDAL.DataContext;
+using UserServiceDAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") ??
+                      builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<UserServiceBusiness.Services.UserService>();
+builder.Services.AddScoped<RoleService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -23,6 +36,14 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{
+}

@@ -4,12 +4,12 @@ using UserServiceBusiness.Services;
 namespace UserService.Controllers;
 
 [ApiController]
-[Route("users")]
+[Route("api/skeleton")]
 public class SkeletonController : ControllerBase
 {
     private MessageProducer _sender = new();
 
-    [HttpGet("skeleton")]
+    [HttpGet("")]
     public string GetSkeletonMessage()
     {
         return "This is the User Service Skeleton endpoint.";

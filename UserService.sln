@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserIntegrationTests", "Use
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceBusiness", "UserServiceBusiness\UserServiceBusiness.csproj", "{23F74748-51AE-43AC-8BFB-278840A0EA65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceDAL", "UserServiceDAL\UserServiceDAL.csproj", "{0319A483-ADC7-4D4B-BF73-85370D662C14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{23F74748-51AE-43AC-8BFB-278840A0EA65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23F74748-51AE-43AC-8BFB-278840A0EA65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23F74748-51AE-43AC-8BFB-278840A0EA65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0319A483-ADC7-4D4B-BF73-85370D662C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0319A483-ADC7-4D4B-BF73-85370D662C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0319A483-ADC7-4D4B-BF73-85370D662C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0319A483-ADC7-4D4B-BF73-85370D662C14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

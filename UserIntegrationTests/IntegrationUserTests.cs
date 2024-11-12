@@ -29,7 +29,7 @@ namespace UserIntegrationTests
         [TestMethod]
         public async Task GetSkeleton()
         {
-            var response = await _client.GetAsync("/users/skeleton");
+            var response = await _client.GetAsync("/api/skeleton");
             var value = await response.Content.ReadAsStringAsync();
 
             response.EnsureSuccessStatusCode();
