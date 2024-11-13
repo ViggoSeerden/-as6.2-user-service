@@ -3,18 +3,11 @@ using UserServiceBusiness.Models;
 
 namespace UserServiceBusiness.Services;
 
-public class RoleService
+public class RoleService(IRoleRepository roleRepository)
 {
-    private readonly IRoleRepository _roleRepository;
-
-    public RoleService(IRoleRepository roleRepository)
-    {
-        _roleRepository = roleRepository;
-    }
-    
-    public Task<IEnumerable<Role>> GetAllRolesAsync() => _roleRepository.GetAllAsync();
-    public Task<Role> GetRoleByIdAsync(string id) => _roleRepository.GetByIdAsync(id);
-    public Task AddRoleAsync(Role role) => _roleRepository.AddAsync(role);
-    public Task UpdateRoleAsync(Role role) => _roleRepository.UpdateAsync(role);
-    public Task DeleteRoleAysnc(string id) => _roleRepository.DeleteAsync(id);
+    public Task<IEnumerable<Role>> GetAllRolesAsync() => roleRepository.GetAllAsync();
+    public Task<Role> GetRoleByIdAsync(Guid id) => roleRepository.GetByIdAsync(id);
+    public Task AddRoleAsync(Role role) => roleRepository.AddAsync(role);
+    public Task UpdateRoleAsync(Role role) => roleRepository.UpdateAsync(role);
+    public Task DeleteRoleAsync(Guid id) => roleRepository.DeleteAsync(id);
 }

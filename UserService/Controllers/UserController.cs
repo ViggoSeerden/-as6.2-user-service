@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using UserServiceBusiness.Models;
-using UserServiceBusiness.Services;
 
 namespace UserService.Controllers
 {
@@ -16,7 +15,7 @@ namespace UserService.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<IActionResult> GetUserById(Guid id)
         {
             var user = await userService.GetUserByIdAsync(id);
             return Ok(user);
@@ -33,7 +32,7 @@ namespace UserService.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User updatedUser)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -43,9 +42,9 @@ namespace UserService.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            await userService.DeleteUserAysnc(id);
+            await userService.DeleteUserAsync(id);
             return Ok();
         }
     }

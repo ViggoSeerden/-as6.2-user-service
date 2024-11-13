@@ -11,10 +11,10 @@ public class UserRepository : IUserRepository
     public UserRepository(AppDbContext context) => _context = context;
 
     public async Task<IEnumerable<User>> GetAllAsync() => await _context.Users.ToListAsync();
-    public async Task<User> GetByIdAsync(string id) => await _context.Users.FindAsync(id);
+    public async Task<User> GetByIdAsync(Guid id) => await _context.Users.FindAsync(id);
     public async Task AddAsync(User user) => await _context.Users.AddAsync(user);
     public async Task UpdateAsync(User user) => _context.Users.Update(user);
-    public async Task DeleteAsync(string id)
+    public async Task DeleteAsync(Guid id)
     {
         var user = await GetByIdAsync(id);
         _context.Users.Remove(user);

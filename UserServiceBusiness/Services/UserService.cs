@@ -3,18 +3,11 @@ using UserServiceBusiness.Models;
 
 namespace UserServiceBusiness.Services;
 
-public class UserService
+public class UserService(IUserRepository userRepository)
 {
-    private readonly IUserRepository _userRepository;
-
-    public UserService(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
-    
-    public Task<IEnumerable<User>> GetAllUsersAsync() => _userRepository.GetAllAsync();
-    public Task<User> GetUserByIdAsync(string id) => _userRepository.GetByIdAsync(id);
-    public Task AddUserAsync(User user) => _userRepository.AddAsync(user);
-    public Task UpdateUserAsync(User user) => _userRepository.UpdateAsync(user);
-    public Task DeleteUserAysnc(string id) => _userRepository.DeleteAsync(id);
+    public Task<IEnumerable<User>> GetAllUsersAsync() => userRepository.GetAllAsync();
+    public Task<User> GetUserByIdAsync(Guid id) => userRepository.GetByIdAsync(id);
+    public Task AddUserAsync(User user) => userRepository.AddAsync(user);
+    public Task UpdateUserAsync(User user) => userRepository.UpdateAsync(user);
+    public Task DeleteUserAsync(Guid id) => userRepository.DeleteAsync(id);
 }
