@@ -14,7 +14,7 @@ public class MessageReceiver : IHostedService
 
     public MessageReceiver()
     {
-        var factory = new ConnectionFactory() { HostName = "localhost" };
+        var factory = new ConnectionFactory() { HostName = Environment.GetEnvironmentVariable("RabbitMQ") ?? "localhost" };
         var connection = factory.CreateConnection();
         _channel = connection.CreateModel();
         _channel.QueueDeclare(queue: "send-email",

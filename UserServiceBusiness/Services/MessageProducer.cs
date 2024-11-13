@@ -9,7 +9,7 @@ public class MessageProducer
 
     public MessageProducer()
     {
-        var factory = new ConnectionFactory { HostName = "localhost" };
+        var factory = new ConnectionFactory { HostName = Environment.GetEnvironmentVariable("RabbitMQ") ?? "localhost" };
         var connection = factory.CreateConnection();
         _channel = connection.CreateModel();
 
