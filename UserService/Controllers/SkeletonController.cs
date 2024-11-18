@@ -15,10 +15,10 @@ public class SkeletonController : ControllerBase
         return "This is the User Service Skeleton endpoint.";
     }    
     
-    [HttpGet("skeleton/email")]
-    public string? SendSkeletonEmail()
+    [HttpPost("email")]
+    public string? SendSkeletonEmail(string email)
     {
-        _sender.SendMessage();
+        _sender.SendMessage(email);
         var response = MessageReceiver.GetConsumedMessage();
         return response;
     }

@@ -20,15 +20,14 @@ public class MessageProducer
             arguments: null);
     }
     
-    public void SendMessage()
+    public void SendMessage(string content)
     {
-        const string message = "Send an Email";
-        var body = Encoding.UTF8.GetBytes(message);
+        var body = Encoding.UTF8.GetBytes(content);
 
         _channel.BasicPublish(exchange: string.Empty,
             routingKey: "send-email",
             basicProperties: null,
             body: body);
-        Console.WriteLine($" [x] Sent {message}");
+        Console.WriteLine($" [x] Sent {content}");
     }
 }
