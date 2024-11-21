@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceBusiness.Models;
 
@@ -8,6 +9,7 @@ namespace UserService.Controllers
     public class UserController(UserServiceBusiness.Services.UserService userService) : ControllerBase
     {
         [HttpGet("")]
+        [Authorize("read:users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await userService.GetAllUsersAsync();
@@ -15,13 +17,23 @@ namespace UserService.Controllers
         }
         
         [HttpGet("{id}")]
+        [Authorize("read:user")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var user = await userService.GetUserByIdAsync(id);
             return Ok(user);
         }
         
+        [HttpGet("self")]
+        [Authorize("read:self")]
+        public async Task<IActionResult> GetSelf(Guid id)
+        {
+            var user = await userService.GetUserByIdAsync(id);
+            return Ok(user);
+        }
+        
         [HttpPost("")]
+        [Authorize("write:add_user")]
         public async Task<IActionResult> AddUser([FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -32,6 +44,7 @@ namespace UserService.Controllers
         }
         
         [HttpPut("{id}")]
+        [Authorize("write:update_user")]
         public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User updatedUser)
         {
             if (!ModelState.IsValid)
@@ -42,6 +55,7 @@ namespace UserService.Controllers
         }
         
         [HttpDelete("{id}")]
+        [Authorize("write:delete_user")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             await userService.DeleteUserAsync(id);
