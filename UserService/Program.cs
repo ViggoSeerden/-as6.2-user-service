@@ -33,9 +33,15 @@ builder.Services.AddCors(options =>
             policy.AllowAnyMethod();
         });
     }
-    // else
-    // {
-    // }
+    else
+    {
+        options.AddPolicy("Production", policy =>
+        {
+            policy.AllowAnyOrigin(); //temp
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+        });
+    }
 });
 
 builder.Services.AddHostedService<MessageReceiver>();
@@ -55,9 +61,10 @@ if (builder.Environment.IsDevelopment())
 {
     app.UseCors("Development");
 }
-// else
-// {
-// }
+else
+{
+    app.UseCors("Production");
+}
 
 app.MapControllers();
 
