@@ -21,6 +21,23 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+// Cors
+builder.Services.AddCors(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        options.AddPolicy("Development", policy =>
+        {
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+        });
+    }
+    // else
+    // {
+    // }
+});
+
 builder.Services.AddHostedService<MessageReceiver>();
 
 var app = builder.Build();
@@ -33,6 +50,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+if (builder.Environment.IsDevelopment())
+{
+    app.UseCors("Development");
+}
+// else
+// {
+// }
 
 app.MapControllers();
 
