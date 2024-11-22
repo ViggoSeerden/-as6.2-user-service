@@ -62,7 +62,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 // Debugging
-Console.WriteLine(builder.Environment.IsDevelopment());
+Console.WriteLine(builder.Environment.EnvironmentName);
 // Console.WriteLine(Environment.GetEnvironmentVariable("Auth__Audience"));
 
 // Cors
