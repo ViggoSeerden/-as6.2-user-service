@@ -52,11 +52,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     }
 });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("read:users", policy => policy.Requirements.Add(new
-        HasScopeRequirement("read:users", Environment.GetEnvironmentVariable("Auth__Domain"))));
-});
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("read:users", policy => policy.Requirements.Add(new
+        HasScopeRequirement("read:users", Environment.GetEnvironmentVariable("Auth__Domain"))))
+    .AddPolicy("read:user", policy => policy.Requirements.Add(new
+        HasScopeRequirement("read:user", Environment.GetEnvironmentVariable("Auth__Domain"))))
+    .AddPolicy("read:self", policy => policy.Requirements.Add(new
+        HasScopeRequirement("read:self", Environment.GetEnvironmentVariable("Auth__Domain"))))
+    .AddPolicy("write:add_user", policy => policy.Requirements.Add(new
+        HasScopeRequirement("write:add_user", Environment.GetEnvironmentVariable("Auth__Domain"))))
+    .AddPolicy("write:update_user", policy => policy.Requirements.Add(new
+        HasScopeRequirement("write:update_user", Environment.GetEnvironmentVariable("Auth__Domain"))))
+    .AddPolicy("write:delete_user", policy => policy.Requirements.Add(new
+        HasScopeRequirement("write:delete_user", Environment.GetEnvironmentVariable("Auth__Domain"))));
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
