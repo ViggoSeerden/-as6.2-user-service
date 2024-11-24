@@ -24,7 +24,6 @@ builder.Services.AddScoped<UserServiceBusiness.Services.UserService>();
 builder.Services.AddScoped<RoleService>();
 
 // Auth0
-
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -81,9 +80,9 @@ builder.Services.AddCors(options =>
     {
         options.AddPolicy("Production", policy =>
         {
-            policy.AllowAnyOrigin(); //temp
+            policy.WithOrigins("http://localhost:3000"); //temp
             policy.AllowAnyHeader();
-            policy.AllowAnyMethod();
+            policy.WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
         });
     }
 });
@@ -105,14 +104,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-if (builder.Environment.IsDevelopment())
-{
-    app.UseCors("Development");
-}
-else
-{
-    app.UseCors("Production");
-}
+app.UseCors(builder.Environment.IsDevelopment() ? "Development" : "Production");
 
 app.UseHttpsRedirection();
 
