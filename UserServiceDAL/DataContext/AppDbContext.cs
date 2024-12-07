@@ -18,6 +18,10 @@ public class AppDbContext : DbContext
     {
         modelBuilder.Entity<Role>().HasKey(r => r.Id);
         modelBuilder.Entity<User>().HasKey(u => u.Id);
-        modelBuilder.Entity<User>().HasOne(u => u.Role);
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Role)
+            .WithMany(r => r.Users)
+            .HasForeignKey(u => u.RoleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
