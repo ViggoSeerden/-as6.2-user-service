@@ -18,7 +18,7 @@ export const options = {
 };
 
 export default function () {
-    const url = 'http://localhost:8080/api/users';
+    const url = `http://localhost:8080/api/users/self/email?email=${process.env.TEST_EMAIL}`;
     const params = {
         headers: {
             'Authorization': `Bearer ${process.env.TOKEN}`,

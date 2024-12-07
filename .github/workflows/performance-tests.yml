@@ -67,5 +67,6 @@ jobs:
           CLOUD_PROJECT: ${{ secrets.GRAFANA_CLOUD_PROJECT }}
           BRANCH: ${{ github.ref_name }}
           PROJECT_NAME: 'User Service'
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
         run: |
           k6 run load-script.js --out cloud
