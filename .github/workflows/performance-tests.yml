@@ -31,6 +31,7 @@ jobs:
         uses: namoshek/rabbitmq-github-action@v1
         with:
           ports: '5672:5672 15672:15672'
+          container-name: 'rabbitmq'
 
       - name: Start Application Service
         run: |
@@ -41,6 +42,7 @@ jobs:
             -e "Auth__Domain=${{ secrets.AUTH0_DOMAIN }}" \
             -e "Auth__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
             -e "Test__Email=${{ secrets.TEST_EMAIL }}" \
+            -e "RabbitMQ=rabbitmq" \
             ${{ secrets.REGISTRY_USERNAME }}/as6-2_osso_user_service:${{ github.ref_name }}
 
       - name: Install dependencies
@@ -58,12 +60,16 @@ jobs:
 
       - name: Setup K6
         uses: grafana/setup-k6-action@v1
+        
+      - name: Check app logs
+        run: |
+          docker logs app-service
 
       - name: Run k6 tests
         uses: grafana/run-k6-action@v1
         env:
-          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
-          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
+#          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
+#          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
           TOKEN: ${{ steps.get-token.outputs.access-token }}
           PROJECT_NAME: 'User Service'
           BRANCH: ${{ github.ref_name }}
