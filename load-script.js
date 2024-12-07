@@ -13,7 +13,7 @@ export const options = {
     ],
     // cloud: {
     //     projectID: `${__ENV.K6_CLOUD_PROJECT_ID}`,
-    //     name: `${__ENV.PROJECT_NAME.toString()} ${__ENV.BRANCH}: Load Test`
+    //     name: `${__ENV.PROJECT_NAME} ${__ENV.BRANCH}: Load Test`
     // }
 };
 
