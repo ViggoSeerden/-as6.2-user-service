@@ -56,6 +56,9 @@ jobs:
           audience: '${{ secrets.AUTH0_AUDIENCE }}'
           grant-type: 'client_credentials'
 
+      - name: Setup K6
+        uses: grafana/setup-k6-action@v1
+
       - name: Run k6 tests
         env:
           TOKEN: ${{ steps.get-token.outputs.access-token }}
