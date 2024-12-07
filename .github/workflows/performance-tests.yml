@@ -48,7 +48,14 @@ jobs:
           Auth__Domain: "${{ secrets.AUTH0_DOMAIN }}"
           Auth__Audience: "${{ secrets.AUTH0_AUDIENCE }}"
           Test__Email: "${{ secrets.TEST_EMAIL }}"
-        run: dotnet run --project ./UserService
+        run: | 
+          dotnet run --project ./UserService &
+          echo "Waiting for the service to start on port 8080..."
+          until nc -z localhost 8080; do
+            echo "Port 8080 not ready, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Service is listening on port 8080."
 
       - name: Install dependencies
         run: yarn
