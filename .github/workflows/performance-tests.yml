@@ -37,17 +37,18 @@ jobs:
         with:
           ports: '5672:5672 15672:15672'
 
-      - name: Start Application Service
-        run: |
-          docker run -d \
-            --name app-service \
-            -p 8080:8080 \
-            -e "ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
-            -e "Auth__Domain=${{ secrets.AUTH0_DOMAIN }}" \
-            -e "Auth__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
-            -e "Test__Email=${{ secrets.TEST_EMAIL }}" \
-            -e "RabbitMQ=host.docker.internal" \
-            ${{ secrets.REGISTRY_USERNAME }}/as6-2_osso_user_service:${{ github.ref_name }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Start Service
+        env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}"
+          Auth__Domain: "${{ secrets.AUTH0_DOMAIN }}"
+          Auth__Audience: "${{ secrets.AUTH0_AUDIENCE }}"
+          Test__Email: "${{ secrets.TEST_EMAIL }}"
+        run: dotnet run --project ./UserService
 
       - name: Install dependencies
         run: yarn
@@ -64,10 +65,6 @@ jobs:
 
       - name: Setup K6
         uses: grafana/setup-k6-action@v1
-        
-      - name: Check app logs
-        run: |
-          docker logs app-service
 
       - name: Run k6 tests
         uses: grafana/run-k6-action@v1
@@ -75,7 +72,6 @@ jobs:
 #          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
 #          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
           TOKEN: ${{ steps.get-token.outputs.access-token }}
-          PROJECT_NAME: 'User Service'
           BRANCH: ${{ github.ref_name }}
           TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
         with:
