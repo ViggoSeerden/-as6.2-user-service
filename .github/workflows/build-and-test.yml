@@ -41,4 +41,5 @@ jobs:
         ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}"
         Auth__Domain: "${{ secrets.AUTH0_DOMAIN }}"
         Auth__Audience: "${{ secrets.AUTH0_AUDIENCE }}"
+        Test__Email: "${{ secrets.TEST_EMAIL }}"
       run: dotnet test ./UserIntegrationTests/UserIntegrationTests.csproj

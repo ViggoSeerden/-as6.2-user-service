@@ -30,6 +30,14 @@ namespace UserService.Controllers
         {
             var user = await userService.GetUserByIdAsync(id);
             return Ok(user);
+        }        
+        
+        [HttpGet("self/email")]
+        [Authorize("read:self")]
+        public async Task<IActionResult> GetSelfByEmail(string email)
+        {
+            var user = await userService.GetUserByEmail(email);
+            return Ok(user);
         }
         
         [HttpPost("")]

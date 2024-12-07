@@ -122,6 +122,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
+    Seeder.SeedData(dbContext);
 }
 
 app.Run();
