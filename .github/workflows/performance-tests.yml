@@ -44,7 +44,7 @@ jobs:
           docker run -d \
             --name app-service \
             -p 8080:8080 \
-            -e "ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
+            -e "ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
             -e "Auth__Domain=${{ secrets.AUTH0_DOMAIN }}" \
             -e "Auth__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
             -e "Test__Email=${{ secrets.TEST_EMAIL }}" \
