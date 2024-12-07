@@ -12,16 +12,16 @@ export const options = {
         { duration: '5m', target: 0 },
     ],
     cloud: {
-        projectID: `${process.env.CLOUD_PROJECT.toString()}`,
-        name: `${process.env.PROJECT_NAME.toString()} ${process.env.BRANCH.toString()}: Load Test`
+        projectID: `${__ENV.CLOUD_PROJECT.toString()}`,
+        name: `${__ENV.PROJECT_NAME.toString()} ${__ENV.BRANCH.toString()}: Load Test`
     }
 };
 
 export default function () {
-    const url = `http://localhost:8080/api/users/self/email?email=${process.env.TEST_EMAIL.toString()}`;
+    const url = `http://localhost:8080/api/users/self/email?email=${__ENV.TEST_EMAIL.toString()}`;
     const params = {
         headers: {
-            'Authorization': `Bearer ${process.env.TOKEN.toString()}`,
+            'Authorization': `Bearer ${__ENV.TOKEN.toString()}`,
             'Content-Type': 'application/json',
         },
     };
