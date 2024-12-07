@@ -11,14 +11,14 @@ export const options = {
         { duration: '10m', target: 100 },
         { duration: '5m', target: 0 },
     ],
-    cloud: {
-        projectID: `${__ENV.K6_CLOUD_PROJECT_ID.toString()}`,
-        name: `${__ENV.PROJECT_NAME.toString()} ${__ENV.BRANCH.toString()}: Load Test`
-    }
+    // cloud: {
+    //     projectID: `${__ENV.K6_CLOUD_PROJECT_ID}`,
+    //     name: `${__ENV.PROJECT_NAME.toString()} ${__ENV.BRANCH}: Load Test`
+    // }
 };
 
 export default function () {
-    const url = `http://localhost:8080/api/users/self/email?email=${__ENV.TEST_EMAIL.toString()}`;
+    const url = `http://localhost:8080/api/users/self/email?email=${__ENV.TEST_EMAIL}`;
     const params = {
         headers: {
             'Authorization': `Bearer ${__ENV.TOKEN}`,
