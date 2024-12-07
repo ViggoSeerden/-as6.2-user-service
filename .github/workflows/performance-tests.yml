@@ -49,16 +49,22 @@ jobs:
       - name: Get Auth0 Token
         id: get-token
         run: |
-          TOKEN=$(curl --request POST \
-            --url ${{ secrets.AUTH0_DOMAIN }}oauth/token \
+          TOKEN_RESPONSE=$(curl --request POST \
+            --url ${{ secrets.AUTH0_DOMAIN }}/oauth/token \
             --header 'Content-Type: application/json' \
             --data '{
-              "client_id": ${{ secrets.AUTH0_CLIENT_ID }},
-              "client_secret": ${{ secrets.AUTH0_CLIENT_SECRET }},
-              "audience": ${{ secrets.AUTH0_AUDIENCE }},
-              "grant_type": "client_credentials"
-            }' | jq -r '.access_token')
-          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
+            "client_id": "'"${{ secrets.AUTH0_CLIENT_ID }}"'",
+            "client_secret": "'"${{ secrets.AUTH0_CLIENT_SECRET }}"'",
+            "audience": "'"${{ secrets.AUTH0_AUDIENCE }}"'",
+            "grant_type": "client_credentials"
+          }')
+          
+          echo "Response: $TOKEN_RESPONSE"  # Debugging output
+          
+          # Parse the token from the response
+          TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.access_token')
+            
+            echo "TOKEN=$TOKEN" >> $GITHUB_ENV
 
       - name: Run k6 tests
         env:
