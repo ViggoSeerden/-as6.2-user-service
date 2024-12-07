@@ -46,7 +46,8 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - uses: Kajatin/auth0-login@v1
+      - name: Retrieve Auth0 Access Token
+        uses: Kajatin/auth0-login@v1.0.2
         id: get-token
         with:
           tenant-url: '${{ secrets.AUTH0_DOMAIN }}'
