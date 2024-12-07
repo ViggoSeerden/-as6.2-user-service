@@ -59,16 +59,14 @@ jobs:
       - name: Setup K6
         uses: grafana/setup-k6-action@v1
 
-      - name: Check Access Token
-        run: |
-          echo "Access Token: ${{ steps.get-token.outputs.access-token }}"
-             
       - name: Run k6 tests
+        uses: grafana/run-k6-action@v1
         env:
+          K6_CLOUD_TOKEN: ${{ secrets.K6_CLOUD_TOKEN }}
+          K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
           TOKEN: ${{ steps.get-token.outputs.access-token }}
-          CLOUD_PROJECT: ${{ secrets.GRAFANA_CLOUD_PROJECT }}
-          BRANCH: ${{ github.ref_name }}
           PROJECT_NAME: 'User Service'
+          BRANCH: ${{ github.ref_name }}
           TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-        run: |
-          k6 run load-script.js --out cloud
+        with:
+          path: load-script.js
