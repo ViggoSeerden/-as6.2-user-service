@@ -12,7 +12,7 @@ export const options = {
         { duration: '5m', target: 0 },
     ],
     cloud: {
-        projectID: ${process.env.CLOUD_PROJECT.toString()},
+        projectID: `${process.env.CLOUD_PROJECT.toString()}`,
         name: `${process.env.PROJECT_NAME.toString()} ${process.env.BRANCH.toString()}: Load Test`
     }
 };
