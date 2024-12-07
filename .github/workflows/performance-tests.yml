@@ -2,7 +2,7 @@ name: Performance Tests
 
 on:
   workflow_run:
-    workflows: [ "Build and Push Docker Image" ]
+    workflows: [ "Dockerize" ]
     types:
       - completed
   push:
