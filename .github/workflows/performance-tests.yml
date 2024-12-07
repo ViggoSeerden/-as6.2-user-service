@@ -46,23 +46,18 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Get Auth0 Token
+      - uses: Kajatin/auth0-login@v1
         id: get-token
-        run: |
-          TOKEN=$(curl --request POST \
-            --url ${{ secrets.AUTH0_DOMAIN }}oauth/token \
-            --header 'Content-Type: application/json' \
-            --data '{
-              "client_id": ${{ secrets.AUTH0_CLIENT_ID }},
-              "client_secret": ${{ secrets.AUTH0_CLIENT_SECRET }},
-              "audience": ${{ secrets.AUTH0_AUDIENCE }},
-              "grant_type": "client_credentials"
-            }' | jq -r '.access_token')
-          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
+        with:
+          tenant-url: '${{ secrets.AUTH0_DOMAIN }}'
+          client-id: '${{ secrets.AUTH0_CLIENT_ID }}'
+          client-secret: '${{ secrets.AUTH0_CLIENT_SECRET }}'
+          audience: '${{ secrets.AUTH0_AUDIENCE }}'
+          grant-type: 'client_credentials'
 
       - name: Run k6 tests
         env:
-          TOKEN: ${{ env.TOKEN }}
+          TOKEN: ${{ steps.get-token.outputs.access-token }}
           CLOUD_PROJECT: ${{ secrets.GRAFANA_CLOUD_PROJECT }}
           BRANCH: ${{ github.ref_name }}
           PROJECT_NAME: 'User Service'
