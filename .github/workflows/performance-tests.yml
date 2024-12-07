@@ -34,14 +34,15 @@ jobs:
           ports: '5672:5672 15672:15672'
 
       - name: Start Application Service
-        uses: docker://${{ secrets.REGISTRY_USERNAME }}/as6-2_osso_user_service:${{ github.ref_name }}
-        with:
-          ports: '8080:8080'
-        env:
-          ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}"
-          Auth__Domain: "${{ secrets.AUTH0_DOMAIN }}"
-          Auth__Audience: "${{ secrets.AUTH0_AUDIENCE }}"
-          Test__Email: "${{ secrets.TEST_EMAIL }}"
+        run: |
+          docker run -d \
+            --name app-service \
+            -p 8080:8080 \
+            -e "ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
+            -e "Auth__Domain=${{ secrets.AUTH0_DOMAIN }}" \
+            -e "Auth__Audience=${{ secrets.AUTH0_AUDIENCE }}" \
+            -e "Test__Email=${{ secrets.TEST_EMAIL }}" \
+            ${{ secrets.REGISTRY_USERNAME }}/as6-2_osso_user_service:${{ github.ref_name }}
 
       - name: Install dependencies
         run: yarn
