@@ -35,6 +35,6 @@ jobs:
     # Step 5: Deploy to AKS
     - name: Deploy to AKS
       run: |
-        kubectl apply -f k8s/deployment.yaml  # Path to your deployment manifest
-        kubectl set image deployment/as6-2_osso_user_service as6-2_osso_user_service-container=${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
-        kubectl rollout status deployment/as6-2_osso_user_service
+        kubectl apply -f deployment.yaml  # Path to your deployment manifest
+        kubectl set image deployment/user-service user-service=${{ secrets.ACR_NAME }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
+        kubectl rollout status deployment/user-service
