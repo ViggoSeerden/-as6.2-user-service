@@ -1,0 +1,36 @@
+name: Deploy to AKS with Kubeconfig
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to Azure CLI
+      run: |
+        echo "${{ secrets.AZURE_USERNAME }}"
+        az login --username "${{ secrets.AZURE_USERNAME }}" --password "${{ secrets.AZURE_PASSWORD }}"
+        az acr login --name ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+
+    - name: Build and push Docker image
+      run: |
+        IMAGE_TAG=${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
+        docker build -t $IMAGE_TAG .
+        docker push $IMAGE_TAG
+
+    - name: Set kubeconfig for AKS
+      run: |
+        echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+        export KUBECONFIG=kubeconfig
+
+    - name: Deploy to AKS
+      run: |
+        kubectl set image deployment/myapp myapp-container=${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/myapp:${{ github.sha }}
+        kubectl rollout status deployment/myapp
