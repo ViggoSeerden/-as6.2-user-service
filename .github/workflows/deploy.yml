@@ -22,10 +22,10 @@ jobs:
         echo "KUBECONFIG set to $(pwd)/kubeconfig.yaml"
         kubectl --kubeconfig=$(pwd)/kubeconfig.yaml
 
-    - name: Verify kubectl connection to AKS
-      run: |
-        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml config view
-        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml get nodes
+    # - name: Verify kubectl connection to AKS
+    #   run: |
+    #     kubectl --kubeconfig=$(pwd)/kubeconfig.yaml config view
+    #     kubectl --kubeconfig=$(pwd)/kubeconfig.yaml get nodes
 
     - name: Log in to ACR
       run: |
@@ -34,8 +34,7 @@ jobs:
     - name: Prepare Deployment File
       run: |
         sed -i "s|PLACEHOLDER_AZURE_CONTAINER_REGISTRY|${{ secrets.AZURE_CONTAINER_REGISTRY }}|g" deployment.yaml
-        # sed -i "s|PLACEHOLDER_GITHUB_SHA|${{ github.sha }}|g" deployment.yaml
-        IMAGE_TAG=${{ secrets.ACR_NAME }}.azurecr.io/as6-2_osso_user_service:main
+        IMAGE_TAG=${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/as6-2_osso_user_service:main
         docker build -t $IMAGE_TAG .
         docker push $IMAGE_TAG
     
