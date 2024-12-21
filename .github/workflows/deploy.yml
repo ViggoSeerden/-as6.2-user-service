@@ -19,14 +19,15 @@ jobs:
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: |
-        echo "$KUBECONFIG" | base64 --decode > kubeconfig.yaml
+        echo "$KUBECONFIG" > kubeconfig.yaml
         export KUBECONFIG=$(pwd)/kubeconfig.yaml
         echo "KUBECONFIG set to $(pwd)/kubeconfig.yaml"
+        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml
 
     - name: Verify kubectl connection to AKS
       run: |
-        kubectl config view
-        kubectl get nodes
+        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml config view
+        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml get nodes
 
     # Step 3: Log in to ACR
     - name: Log in to ACR
@@ -43,6 +44,6 @@ jobs:
     # Step 5: Deploy to AKS
     - name: Deploy to AKS
       run: |
-        kubectl apply -f deployment.yaml --validate=false
-        kubectl set image deployment/user-service user-service=${{ secrets.ACR_NAME }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
-        kubectl rollout status deployment/user-service
+        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml apply -f deployment.yaml --validate=false
+        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml set image deployment/user-service user-service=${{ secrets.ACR_NAME }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
+        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml rollout status deployment/user-service
