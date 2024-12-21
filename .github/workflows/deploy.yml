@@ -34,8 +34,8 @@ jobs:
     - name: Prepare Deployment File
       run: |
         IMAGE_TAG=${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
-        sed -i "s|\${{ secrets.AZURE_CONTAINER_REGISTRY }}|${{ secrets.AZURE_CONTAINER_REGISTRY }}|g" deployment.yaml
-        sed -i "s|\${{ github.sha }}|${{ github.sha }}|g" deployment.yaml
+        sed -i "s@\\${{ secrets.AZURE_CONTAINER_REGISTRY }}@${{ secrets.AZURE_CONTAINER_REGISTRY }}@g" deployment.yaml
+        sed -i "s@\\${{ github.sha }}@${{ github.sha }}@g" deployment.yaml
 
     - name: Deploy to AKS
       run: |
