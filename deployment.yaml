@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: ${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
+          image: PLACEHOLDER_AZURE_CONTAINER_REGISTRY.azurecr.io/as6-2_osso_user_service:PLACEHOLDER_GITHUB_SHA
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
