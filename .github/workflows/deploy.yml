@@ -3,18 +3,16 @@ name: Deploy to AKS with Kubeconfig
 on:
   push:
     branches:
-      - main  # Adjust to your deployment branch
+      - main 
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the repository code
     - name: Checkout Code
       uses: actions/checkout@v4
-
-    # Step 2: Set up kubeconfig for AKS
+      
     - name: Write Kubeconfig to File
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
@@ -29,21 +27,17 @@ jobs:
         kubectl --kubeconfig=$(pwd)/kubeconfig.yaml config view
         kubectl --kubeconfig=$(pwd)/kubeconfig.yaml get nodes
 
-    # Step 3: Log in to ACR
     - name: Log in to ACR
       run: |
         echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io --username ${{ secrets.ACR_USERNAME }} --password-stdin
 
-    # Step 4: Build and push Docker image to ACR
-    - name: Build and Push Docker Image
+    - name: Prepare Deployment File
       run: |
         IMAGE_TAG=${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
-        docker build -t $IMAGE_TAG .
-        docker push $IMAGE_TAG
+        sed -i "s|\${{ secrets.AZURE_CONTAINER_REGISTRY }}|${{ secrets.AZURE_CONTAINER_REGISTRY }}|g" deployment.yaml
+        sed -i "s|\${{ github.sha }}|${{ github.sha }}|g" deployment.yaml
 
-    # Step 5: Deploy to AKS
     - name: Deploy to AKS
       run: |
         kubectl --kubeconfig=$(pwd)/kubeconfig.yaml apply -f deployment.yaml --validate=false
-        kubectl --kubeconfig=$(pwd)/kubeconfig.yaml set image deployment/user-service user-service=${{ secrets.ACR_NAME }}.azurecr.io/as6-2_osso_user_service:${{ github.sha }}
         kubectl --kubeconfig=$(pwd)/kubeconfig.yaml rollout status deployment/user-service
