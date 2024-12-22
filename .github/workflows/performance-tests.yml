@@ -6,8 +6,9 @@ on:
     types:
       - completed
     branches:
-      - main
-      - develop
+      - non-existent-branch
+      # - main
+      # - develop
 
 jobs:
   Performance-Test:
