@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using UserService;
 using UserServiceBusiness.Interfaces;
 using UserServiceBusiness.Services;
@@ -99,7 +100,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-builder.Services.AddHostedService<MessageReceiver>();
+try
+{
+    ConnectionFactory factory = new()
+        { HostName = Environment.GetEnvironmentVariable("RabbitMQ") ?? "localhost" };
+
+    IConnection conn = await factory.CreateConnectionAsync();
+    IChannel channel = await conn.CreateChannelAsync();
+
+    builder.Services.AddSingleton(channel);
+    builder.Services.AddScoped<MessageProducer>();
+    builder.Services.AddHostedService<MessageReceiver>();
+} catch (Exception e)
+{
+    Console.WriteLine("Error connecting to RabbitMQ");
+    Console.WriteLine(e.Message);
+}
 
 var app = builder.Build();
 
