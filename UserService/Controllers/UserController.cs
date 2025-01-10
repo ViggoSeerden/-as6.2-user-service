@@ -46,9 +46,15 @@ namespace UserService.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            
+            var potentialUser = await userService.GetUserByEmail(user.Email);
+            if (potentialUser != null)
+            {
+                return StatusCode(208);
+            }
 
             await userService.AddUserAsync(user);
-            return NoContent();
+            return Created();
         }
 
         [HttpPut("{id}")]
@@ -63,7 +69,7 @@ namespace UserService.Controllers
                 return NotFound();
 
             userService.UpdateUser(updatedUser);
-            return NoContent();
+            return Created();
         }
 
         [HttpDelete("{id}")]
@@ -71,7 +77,7 @@ namespace UserService.Controllers
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             await userService.DeleteUserAsync(id);
-            return Ok();
+            return NoContent();
         }
     }
 }
