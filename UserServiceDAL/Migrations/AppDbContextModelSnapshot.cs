@@ -53,6 +53,10 @@ namespace UserServiceDAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ProviderAccountId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 

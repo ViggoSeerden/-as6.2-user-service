@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceBusiness.Models;
@@ -42,18 +44,38 @@ namespace UserService.Controllers
 
         [HttpPost("")]
         [Authorize("write:add_user")]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] UserDto user, [FromHeader] string authorization)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             
-            var potentialUser = await userService.GetUserByEmail(user.Email);
-            if (potentialUser != null)
+            var token = authorization.Substring("Bearer ".Length).Trim();
+            var claimsPrincipal = DecodeToken(token);
+            var emailClaim = claimsPrincipal.FindFirst("sub")?.Value;
+
+            if (emailClaim == null)
+                return BadRequest();
+            
+            var newUser = new User
             {
-                return StatusCode(208);
+                Name = user.Name,
+                Email = user.Email,
+                ProviderAccountId = emailClaim,
+                RoleId = 4
+            };
+
+            var users = await userService.GetAllUsersAsync();
+
+            foreach (var existingUser in users)
+            {
+                if (existingUser.ProviderAccountId == emailClaim)
+                    return StatusCode(208);
+
+                if (existingUser.Email == newUser.Email)
+                    return StatusCode(208);
             }
 
-            await userService.AddUserAsync(user);
+            await userService.AddUserAsync(newUser);
             return Created();
         }
 
@@ -78,6 +100,20 @@ namespace UserService.Controllers
         {
             await userService.DeleteUserAsync(id);
             return NoContent();
+        }
+        
+        private ClaimsPrincipal DecodeToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            var expirationTime = jwtToken.ValidTo;
+
+            if (expirationTime < DateTime.UtcNow)
+            {
+                throw new Exception("Token has expired.");
+            }
+
+            return new ClaimsPrincipal(new ClaimsIdentity(jwtToken.Claims));
         }
     }
 }

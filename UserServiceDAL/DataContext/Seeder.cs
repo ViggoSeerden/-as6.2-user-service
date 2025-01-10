@@ -35,7 +35,7 @@ public class Seeder
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
-                    new User() { Name = "Test", Email = Environment.GetEnvironmentVariable("Test__Email")!, RoleId = 4 }
+                    new User{ Name = "Test", Email = Environment.GetEnvironmentVariable("Test__Email")!, RoleId = 4, ProviderAccountId = "" }
                 );
                 context.SaveChanges();
             }

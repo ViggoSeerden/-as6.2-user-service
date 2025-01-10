@@ -71,7 +71,6 @@ builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 // Debugging
 Console.WriteLine(builder.Environment.EnvironmentName);
-// Console.WriteLine(Environment.GetEnvironmentVariable("Auth__Audience"));
 
 // Cors
 builder.Services.AddCors(options =>
@@ -89,7 +88,7 @@ builder.Services.AddCors(options =>
     {
         options.AddPolicy("Production", policy =>
         {
-            policy.WithOrigins("http://localhost:3000"); //temp
+            policy.WithOrigins("http://98.64.97.115:3000");
             policy.AllowAnyHeader();
             policy.WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
         });
