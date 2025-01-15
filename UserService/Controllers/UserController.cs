@@ -3,18 +3,29 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceBusiness.Models;
+using UserServiceBusiness.Services;
 
 namespace UserService.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserController(UserServiceBusiness.Services.UserService userService) : ControllerBase
+    public class UserController : ControllerBase
     {
+        private readonly MessageProducer _sender;
+        private readonly UserServiceBusiness.Services.UserService _userService;
+
+        public UserController(MessageProducer sender, UserServiceBusiness.Services.UserService userService)
+        {
+            _sender = sender;
+            _userService = userService;
+        }
+        
+        
         [HttpGet("")]
         [Authorize("read:users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await userService.GetAllUsersAsync();
+            var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
@@ -22,7 +33,7 @@ namespace UserService.Controllers
         [Authorize("read:user")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            var user = await userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             return Ok(user);
         }
 
@@ -30,7 +41,7 @@ namespace UserService.Controllers
         [Authorize("read:self")]
         public async Task<IActionResult> GetSelf(Guid id)
         {
-            var user = await userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             return Ok(user);
         }
 
@@ -38,7 +49,7 @@ namespace UserService.Controllers
         [Authorize("read:self")]
         public async Task<IActionResult> GetSelfByEmail(string email)
         {
-            var user = await userService.GetUserByEmail(email);
+            var user = await _userService.GetUserByEmail(email);
             return Ok(user);
         }
 
@@ -64,7 +75,7 @@ namespace UserService.Controllers
                 RoleId = 4
             };
 
-            var users = await userService.GetAllUsersAsync();
+            var users = await _userService.GetAllUsersAsync();
 
             foreach (var existingUser in users)
             {
@@ -74,8 +85,12 @@ namespace UserService.Controllers
                 if (existingUser.Email == newUser.Email)
                     return StatusCode(208);
             }
+            
+            var requestId = Guid.NewGuid();
+            var emailBytes = System.Text.Encoding.UTF8.GetBytes(user.Email);
+            _sender.SendMessage($"email.request.{requestId}.{Convert.ToBase64String(emailBytes)}", $"Welcome to Osso Online, {user.Name}");
 
-            await userService.AddUserAsync(newUser);
+            await _userService.AddUserAsync(newUser);
             return Created();
         }
 
@@ -86,11 +101,11 @@ namespace UserService.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user != null)
                 return NotFound();
 
-            userService.UpdateUser(updatedUser);
+            _userService.UpdateUser(updatedUser);
             return Created();
         }
 
@@ -98,7 +113,7 @@ namespace UserService.Controllers
         [Authorize("write:delete_user")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-            await userService.DeleteUserAsync(id);
+            await _userService.DeleteUserAsync(id);
             return NoContent();
         }
         
