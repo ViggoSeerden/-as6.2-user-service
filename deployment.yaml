@@ -23,7 +23,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: POSTGRES_CONNECTION_STRING
+                  key: POSTGRES_AZURE_CONNECTION_STRING
             - name: RabbitMQ
               valueFrom:
                 secretKeyRef:

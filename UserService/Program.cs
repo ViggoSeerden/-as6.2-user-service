@@ -88,7 +88,7 @@ builder.Services.AddCors(options =>
     {
         options.AddPolicy("Production", policy =>
         {
-            policy.WithOrigins("http://98.64.97.115:3000");
+            policy.WithOrigins("http://4.175.141.33:3000");
             policy.AllowAnyHeader();
             policy.WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
         });
