@@ -16,6 +16,13 @@ spec:
         - name: user-service
           image: PLACEHOLDER_AZURE_CONTAINER_REGISTRY.azurecr.io/as6-2_osso_user_service:main
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
           ports:
             - containerPort: 8080
           env:
